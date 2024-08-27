@@ -1,24 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import {IGenre} from '../../@types/IGenre';
 import {IMovie} from '../../@types/IMovie';
-import {getMoviesByGenreId} from '../../services/movieService';
 import ScrollContainer from '../../containers/ScrollContainer';
 import Header from '../../components/Header';
 import {Pressable, StyleSheet, Text} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainStackParamList} from '../../@types/MainStack';
-import {useUser} from '../../context/UserContext';
 import {ColorConstants, SizeConstants} from '../../constants/StyleConstants';
+import {useUserStore} from '../../store/userStore';
+import {getMovieByGenreId} from '../../services/movieService';
 
 type GenreProps = NativeStackScreenProps<MainStackParamList, 'Genre'>;
 
 const Genre = (props: GenreProps) => {
   const [movies, setMovies] = useState<IMovie[]>([]);
-  const {isFav} = useUser();
+  const favs = useUserStore(state => state.favs);
 
   useEffect(() => {
+    const fetchData = async () => {
+      setMovies(await getMovieByGenreId(props.route.params.genre.id));
+    };
     if (typeof props.route.params.genre !== 'undefined') {
-      setMovies(getMoviesByGenreId(props.route.params.genre.id));
+      fetchData();
     }
   }, [props.route.params.genre]);
 
@@ -29,7 +32,7 @@ const Genre = (props: GenreProps) => {
           onPress={() => props.navigation.navigate('Movie', {movie})}
           key={movie.id}
           style={styles.movieTitleContainer}>
-          {isFav(movie.id) ? (
+          {favs[movie.id] ? (
             <Text style={styles.movieTitle}>{'👍 ' + movie.title}</Text>
           ) : (
             <Text style={styles.movieTitle}>{movie.title}</Text>

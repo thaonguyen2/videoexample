@@ -3,14 +3,18 @@ import {HomeProps} from './Home.types';
 import {IGenre} from '../../@types/IGenre';
 import {getGenres} from '../../services/movieService';
 import {HomeView} from './Home.view';
+import {useUserStore} from '../../store/userStore';
 
 export const Home = (props: HomeProps) => {
   const [genres, setGenres] = useState<IGenre[]>([]);
 
-  const name = 'Home';
+  const name = useUserStore(state => state.name);
 
   useEffect(() => {
-    setGenres(getGenres());
+    const fetchData = async () => {
+      setGenres(await getGenres());
+    };
+    fetchData();
   }, []);
 
   return (

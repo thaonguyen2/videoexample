@@ -6,17 +6,16 @@ import {
 } from '../../constants/StyleConstants';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {UserStackParamList} from '../../@types/MainStack';
-import {useUser} from '../../context/UserContext';
 import ScrollContainer from '../../containers/ScrollContainer';
+import {useUserStore} from '../../store/userStore';
 
 type UserProps = NativeStackScreenProps<UserStackParamList, 'User'>;
 
 const User = (props: UserProps) => {
-  const {getFavsAsArray} = useUser();
-  const _favsArray = getFavsAsArray();
+  const favs = useUserStore(state => state.favs);
   return (
     <ScrollContainer>
-      {_favsArray.map(movie => {
+      {Object.values(favs).map(movie => {
         return (
           <Pressable
             onPress={() => props.navigation.navigate('Movie', {movie: movie})}

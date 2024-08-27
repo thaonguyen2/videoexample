@@ -15,7 +15,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {ColorConstants, FontConstants} from './constants/StyleConstants';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import User from './views/user/User';
-import {UserProvider} from './context/UserContext';
 
 const TabNavigator = createBottomTabNavigator();
 const MainStack = createNativeStackNavigator<MainStackParamList>();
@@ -72,22 +71,20 @@ const UserStackScreen = () => {
 
 const App = () => {
   return (
-    <UserProvider>
-      <NavigationContainer>
-        <TabNavigator.Navigator>
-          <TabNavigator.Screen
-            name="Main"
-            component={MainStackScreen}
-            options={{headerShown: false}}
-          />
-          <TabNavigator.Screen
-            name="User"
-            component={UserStackScreen}
-            options={{headerShown: false}}
-          />
-        </TabNavigator.Navigator>
-      </NavigationContainer>
-    </UserProvider>
+    <NavigationContainer>
+      <TabNavigator.Navigator>
+        <TabNavigator.Screen
+          name="Main"
+          component={MainStackScreen}
+          options={{headerShown: false}}
+        />
+        <TabNavigator.Screen
+          name="User"
+          component={UserStackScreen}
+          options={{headerShown: false}}
+        />
+      </TabNavigator.Navigator>
+    </NavigationContainer>
   );
 };
 

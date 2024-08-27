@@ -4,14 +4,18 @@ import ScrollContainer from '../../containers/ScrollContainer';
 import React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainStackParamList} from '../../@types/MainStack';
-import {useUser} from '../../context/UserContext';
 import {ColorConstants, FontConstants} from '../../constants/StyleConstants';
+import {useUserStore} from '../../store/userStore';
+import {shallow} from 'zustand/shallow';
 
 type MovieProps = NativeStackScreenProps<MainStackParamList, 'Movie'>;
 
 const Movie = (props: MovieProps) => {
-  const {isFav, addFavById, removeFav} = useUser();
-  const _isFav = isFav(props.route.params.movie.id);
+  const [addFavById, favs, removeFav] = useUserStore(
+    state => [state.addFavById, state.favs, state.removeFav],
+    shallow,
+  );
+  const _isFav = favs[props.route.params.movie.id];
   return (
     <ScrollContainer>
       {props.route.params.movie && (
